@@ -14,9 +14,7 @@
         <akka-version>2.2.0</akka-version>
         <reactivemongo-version>0.9</reactivemongo-version>
         <nscala-time-version>0.4.2</nscala-time-version>
-        <scalatest-version>2.0.M6-SNAP8</scalatest-version>
-        <specs2-version>2.1</specs2-version>
-        <scalamock-version>3.0.1</scalamock-version>
+        <scalatest-version>2.0.M6-SNAP33</scalatest-version>
     </properties>
     <repositories>
         <repository>
@@ -36,8 +34,8 @@
             <url>http://repo.akka.io/snapshots/</url>
         </repository>
         <repository>
-            <id>JBoss Releases</id>
-            <url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+            <id>Typesafe Releases</id>
+            <url>http://repo.typesafe.com/typesafe/releases/</url>
         </repository>
         <repository>
             <id>Sonatype Releases</id>

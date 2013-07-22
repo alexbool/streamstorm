@@ -11,7 +11,7 @@ class InstagramClient extends Actor with ActorLogging {
     case FindMediaByTag(tag) =>
   }
 
-  private class Worker(query: Query) extends Actor with ActorLogging {
+  private class Worker[R](query: Query[R]) extends Actor with ActorLogging {
     def receive = ???
   }
 }

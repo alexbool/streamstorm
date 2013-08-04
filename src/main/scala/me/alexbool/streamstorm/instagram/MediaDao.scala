@@ -14,7 +14,7 @@ class MediaDao(collection: BSONCollection)(implicit ec: ExecutionContext) {
       "location"    -> media.location.map(loc => BSONDocument(
         "id"          -> loc.id,
         "name"        -> loc.name,
-        "coordinates" -> List(loc.coordinates.longitude, loc.coordinates.latitude)
+        "coordinates" -> List(loc.coordinates.longitude.toString(), loc.coordinates.latitude.toString())
       ))
     )
     collection.save(doc)

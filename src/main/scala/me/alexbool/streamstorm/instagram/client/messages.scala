@@ -8,16 +8,17 @@ import org.joda.time.Instant
 sealed trait Query[R] {
   private[streamstorm] def buildRequest: HttpRequest
   private[streamstorm] def responseParser: RootJsonReader[R]
+  def clientId: String
 }
 
-case class FindMediaByTag(tag: String) extends Query[Seq[Media]] {
+case class FindMediaByTag(tag: String, clientId: String) extends Query[Seq[Media]] {
   import spray.httpx.RequestBuilding._
 
-  private[streamstorm] def buildRequest = Get(s"https://api.instagram.com/v1/tags/$tag/media/recent")
+  private[streamstorm] def buildRequest = Get(s"https://api.instagram.com/v1/tags/$tag/media/recent?client_id=$clientId")
 
   private[streamstorm] val responseParser = new RootJsonReader[Seq[Media]] {
-    def read(json: JsValue) = json match {
-      case JsArray(elems) => elems.map(mediaReader.read _)
+    def read(json: JsValue) = json.asJsObject.getFields("data") match {
+      case elems => elems.map(mediaReader.read _)
       case x @ _ => deserializationError(s"Expected array, but got something else: $x")
     }
 

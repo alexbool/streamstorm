@@ -11,7 +11,7 @@ import language.postfixOps
 class InstagramClientSpec extends WordSpec with Matchers {
   val actorSystem = ActorSystem("InstagramClientSpec")
   val client = actorSystem.actorOf(Props(new InstagramClient))
-  implicit val timeout: Timeout = 5.seconds
+  implicit val timeout: Timeout = 15.seconds
 
   "Instagram API client" must {
     "execute /tags/$tag/media/recent queries" in {

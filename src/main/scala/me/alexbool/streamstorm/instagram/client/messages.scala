@@ -1,6 +1,6 @@
 package me.alexbool.streamstorm.instagram.client
 
-import spray.http.{Uri, HttpMethods, HttpRequest}
+import spray.http.HttpRequest
 import spray.json._
 import me.alexbool.streamstorm.instagram.{Coordinates, Location, Media}
 import org.joda.time.Instant
@@ -14,7 +14,6 @@ case class FindMediaByTag(tag: String) extends Query[Seq[Media]] {
   import spray.httpx.RequestBuilding._
 
   private[streamstorm] def buildRequest = Get(s"https://api.instagram.com/v1/tags/$tag/media/recent")
-    //HttpRequest(HttpMethods.GET, Uri(s"https://api.instagram.com/v1/tags/$tag/media/recent"))
 
   private[streamstorm] val responseParser = new RootJsonReader[Seq[Media]] {
     def read(json: JsValue) = json match {

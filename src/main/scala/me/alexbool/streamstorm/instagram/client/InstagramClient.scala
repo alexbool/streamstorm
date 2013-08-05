@@ -1,10 +1,10 @@
 package me.alexbool.streamstorm.instagram.client
 
-import akka.actor.{Props, ActorRef, ActorLogging, Actor}
+import akka.actor._
+import akka.actor.Status.Failure
 import akka.io.IO
 import spray.can.Http
-import spray.http.{HttpRequest, HttpResponse}
-import akka.actor.Status.Failure
+import spray.http. HttpResponse
 import spray.json.JsonParser
 
 class InstagramClient extends Actor with ActorLogging {
@@ -12,12 +12,16 @@ class InstagramClient extends Actor with ActorLogging {
   private val workerSequence = Iterator from 0
 
   def receive = {
-    case m: FindMediaByTag => context.actorOf(Props(new Worker(m, sender)), s"worker-${workerSequence.next()}")
+    case m: FindMediaByTag => {
+      val sndr = context.sender
+      context.actorOf(Props(new Worker(m, sndr)), s"worker-${workerSequence.next()}")
+    }
   }
 
   private class Worker[R](query: Query[R], recipient: ActorRef) extends Actor with ActorLogging {
     override def preStart() {
-      httpTransport ! HttpRequest()
+      log.debug(s"Recipient: $recipient")
+      httpTransport ! query.buildRequest
     }
 
     def receive = {
@@ -26,11 +30,20 @@ class InstagramClient extends Actor with ActorLogging {
     }
 
     private[this] def handleResponse(r: HttpResponse) {
-      recipient ! query.responseParser.read(JsonParser(r.entity.asString))
+      try {
+        log.debug(s"Handling response: $r")
+        recipient ! query.responseParser.read(JsonParser(r.entity.asString))
+      } catch {
+        case e: Exception => {
+          log.warning(s"Error during response parsing: $e")
+          recipient ! Failure(e)
+        }
+      }
       context stop self
     }
 
     private[this] def handleFailure(f: Failure) {
+      log.warning(s"Error during response processing: ${f.cause}")
       recipient ! f
       context stop self
     }

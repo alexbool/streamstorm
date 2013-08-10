@@ -10,11 +10,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala-version>2.10.2</scala-version>
         <spray-version>1.2-20130801</spray-version>
-        <spray-json-version>1.2.4</spray-json-version>
+        <spray-json-version>1.2.5</spray-json-version>
         <akka-version>2.2.0</akka-version>
         <reactivemongo-version>0.9</reactivemongo-version>
         <nscala-time-version>0.4.2</nscala-time-version>
-        <scalatest-version>2.0.M6-SNAP33</scalatest-version>
+        <scalatest-version>2.0.M6-SNAP36</scalatest-version>
     </properties>
     <repositories>
         <repository>

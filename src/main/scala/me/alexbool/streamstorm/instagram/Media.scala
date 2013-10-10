@@ -4,5 +4,4 @@ import org.joda.time.Instant
 
 case class Media(id: String, tags: Seq[String], location: Option[Location], createdTime: Instant)
 
-case class Coordinates(longitude: BigDecimal, latitude: BigDecimal)
-case class Location(id: String, name: String, coordinates: Coordinates)
+case class Location(longitude: BigDecimal, latitude: BigDecimal)

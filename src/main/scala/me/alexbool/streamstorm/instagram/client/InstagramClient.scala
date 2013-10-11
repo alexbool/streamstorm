@@ -13,7 +13,12 @@ class InstagramClient(clientId: String) extends Actor with ActorLogging {
   def receive = {
     case m: Query[_] => {
       val sndr = context.sender
-      context.actorOf(Props(new Worker(m, clientId, sndr)), s"worker-${workerSequence.next()}")
+      context.actorOf(buildWorkerForQuery(m, sndr), s"worker-${workerSequence.next()}")
     }
+  }
+
+  private def buildWorkerForQuery[R](query: Query[R], sndr: ActorRef): Props = query match {
+    case pq: PageableQuery[R] => Props(new PageableWorker(pq, clientId, sndr))
+    case q:  Query[R]         => Props(new Worker(q, clientId, sndr))
   }
 }

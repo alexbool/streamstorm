@@ -15,7 +15,7 @@ class InstagramClientSpec extends WordSpec with Matchers {
 
   "Instagram API client" must {
     "execute /tags/$tag/media/recent queries" in {
-      Await.result(client ? FindMediaByTag("rain"), timeout.duration)
+      Await.result(client ? FindMediaByTag("rain", 20), timeout.duration)
     }
   }
 }

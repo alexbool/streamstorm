@@ -12,7 +12,7 @@ class InstagramClient extends Actor with ActorLogging {
   private val workerSequence = Iterator from 0
 
   def receive = {
-    case m: FindMediaByTag => {
+    case m: Query[_] => {
       val sndr = context.sender
       context.actorOf(Props(new Worker(m, sndr)), s"worker-${workerSequence.next()}")
     }

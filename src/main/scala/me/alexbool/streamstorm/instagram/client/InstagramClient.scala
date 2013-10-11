@@ -7,7 +7,7 @@ import spray.can.Http
 import spray.http. HttpResponse
 import spray.json.JsonParser
 
-class InstagramClient extends Actor with ActorLogging {
+class InstagramClient(clientId: String) extends Actor with ActorLogging {
   private val httpTransport = IO(Http)(context.system)
   private val workerSequence = Iterator from 0
 
@@ -21,7 +21,7 @@ class InstagramClient extends Actor with ActorLogging {
   private class Worker[R](query: Query[R], recipient: ActorRef) extends Actor with ActorLogging {
     override def preStart() {
       log.debug(s"Recipient: $recipient")
-      httpTransport ! query.buildRequest
+      httpTransport ! query.buildRequest(clientId)
     }
 
     def receive = {

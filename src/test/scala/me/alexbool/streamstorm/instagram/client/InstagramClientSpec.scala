@@ -10,12 +10,12 @@ import language.postfixOps
 
 class InstagramClientSpec extends WordSpec with Matchers {
   val actorSystem = ActorSystem("InstagramClientSpec")
-  val client = actorSystem.actorOf(Props(new InstagramClient))
+  val client = actorSystem.actorOf(Props(new InstagramClient("ecf0f9cb0fea44bead53b8db458b447d")))
   implicit val timeout: Timeout = 15.seconds
 
   "Instagram API client" must {
     "execute /tags/$tag/media/recent queries" in {
-      Await.result(client ? FindMediaByTag("rain", "ecf0f9cb0fea44bead53b8db458b447d"), timeout.duration)
+      Await.result(client ? FindMediaByTag("rain"), timeout.duration)
     }
   }
 }

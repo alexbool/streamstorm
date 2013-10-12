@@ -9,7 +9,7 @@ class MediaDao(collection: BSONCollection)(implicit ec: ExecutionContext) {
 
   implicit private val mapper = new MediaMapper
 
-  def save(media: Media) = collection.insert(media)
+  def insertIfNotExists(media: Media) = collection.insert(media)
 
   def findById(id: String): Future[Option[Media]] = {
     collection.find(BSONDocument("_id" -> id)).cursor[Media].headOption()

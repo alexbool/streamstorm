@@ -8,6 +8,7 @@ import spray.http. HttpResponse
 import spray.json.JsonParser
 
 class InstagramClient(clientId: String) extends Actor with ActorLogging {
+  private val httpTransport = IO(Http)(context.system)
   private val workerSequence = Iterator from 0
 
   def receive = {
@@ -18,7 +19,7 @@ class InstagramClient(clientId: String) extends Actor with ActorLogging {
   }
 
   private def buildWorkerForQuery[R](query: Query[R], sndr: ActorRef): Props = query match {
-    case pq: PageableQuery[R] => Props(new PageableWorker(pq, clientId, sndr))
-    case q:  Query[R]         => Props(new Worker(q, clientId, sndr))
+    case pq: PageableQuery[R] => Props(new PageableWorker(pq, clientId, sndr, httpTransport))
+    case q:  Query[R]         => Props(new Worker(q, clientId, sndr, httpTransport))
   }
 }

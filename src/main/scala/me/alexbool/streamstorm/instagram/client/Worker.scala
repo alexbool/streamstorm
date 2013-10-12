@@ -8,10 +8,11 @@ import spray.json.JsonParser
 import spray.can.Http
 import me.alexbool.streamstorm.instagram.parsers.PaginationParser
 
-private [streamstorm] sealed abstract class WorkerBase[R](query: Query[R], clientId: String, recipient: ActorRef)
-        extends Actor with ActorLogging {
-
-  protected val httpTransport = IO(Http)(context.system)
+private [streamstorm] sealed abstract class WorkerBase[R](query: Query[R],
+                                                          clientId: String,
+                                                          recipient: ActorRef,
+                                                          httpTransport: ActorRef)
+  extends Actor with ActorLogging {
 
   override def preStart() {
     log.debug(s"Recipient: $recipient")
@@ -45,8 +46,8 @@ private [streamstorm] sealed abstract class WorkerBase[R](query: Query[R], clien
   }
 }
 
-private[streamstorm] class Worker[R](query: Query[R], clientId: String, recipient: ActorRef)
-        extends WorkerBase[R](query, clientId, recipient) {
+private[streamstorm] class Worker[R](query: Query[R], clientId: String, recipient: ActorRef, httpTransport: ActorRef)
+        extends WorkerBase[R](query, clientId, recipient, httpTransport) {
 
   protected def doWithResponse(r: HttpResponse) {
     recipient ! query.responseParser.read(JsonParser(r.entity.asString))
@@ -54,8 +55,11 @@ private[streamstorm] class Worker[R](query: Query[R], clientId: String, recipien
   }
 }
 
-private[streamstorm] class PageableWorker[R](query: PageableQuery[R], clientId: String, recipient: ActorRef)
-        extends WorkerBase[Seq[R]](query, clientId, recipient) {
+private[streamstorm] class PageableWorker[R](query: PageableQuery[R],
+                                             clientId: String,
+                                             recipient: ActorRef,
+                                             httpTransport: ActorRef)
+  extends WorkerBase[Seq[R]](query, clientId, recipient, httpTransport) {
 
   private[this] val pageCounter = Iterator from 1
   private[this] val pages = collection.mutable.Buffer[Seq[R]]()

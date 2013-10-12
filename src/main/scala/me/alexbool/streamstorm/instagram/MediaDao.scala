@@ -4,12 +4,15 @@ import scala.concurrent.{Future, ExecutionContext}
 import reactivemongo.bson._
 import reactivemongo.api.collections.default.BSONCollection
 import org.joda.time.Instant
+import reactivemongo.core.errors.DatabaseException
 
 class MediaDao(collection: BSONCollection)(implicit ec: ExecutionContext) {
 
   implicit private val mapper = new MediaMapper
 
-  def insertIfNotExists(media: Media) = collection.insert(media)
+  def insertIfNotExists(media: Media): Future[Boolean] = collection.insert(media).map(_.ok).recover({
+    case t: DatabaseException if t.code == Some(11000) => false
+  })
 
   def findById(id: String): Future[Option[Media]] = {
     collection.find(BSONDocument("_id" -> id)).cursor[Media].headOption()

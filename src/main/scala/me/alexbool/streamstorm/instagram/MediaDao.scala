@@ -39,8 +39,8 @@ class MediaDao(collection: BSONCollection)(implicit ec: ExecutionContext) {
         thumbnail = readImage(imgsDoc.getAs[BSONDocument]("thumb").get)
       )
       Media(
-        id          = bson.get("_id").get.asInstanceOf[BSONString].value,
-        tags        = bson.get("tags").get.asInstanceOf[BSONArray].values.map(_.asInstanceOf[BSONString].value),
+        id          = bson.getAs[BSONString]("_id").get.value,
+        tags        = bson.getAs[BSONArray]("tags").get.values.to[Seq].map(_.asInstanceOf[BSONString].value),
         location    = bson.getAs[BSONArray]("location").map(readLocation),
         images      = images,
         createdTime = new Instant(bson.getAs[BSONDateTime]("createdTime").get.value)

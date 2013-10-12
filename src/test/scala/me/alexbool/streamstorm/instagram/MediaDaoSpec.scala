@@ -32,6 +32,9 @@ class MediaDaoSpec extends WordSpec with Matchers {
         createdTime = new Instant
       )
       Await.result(dao.save(media), 15.seconds).ok should be (true)
+
+      val found = Await.result(dao.findById(media.id), 15.seconds)
+      found shouldEqual media
     }
   }
 }

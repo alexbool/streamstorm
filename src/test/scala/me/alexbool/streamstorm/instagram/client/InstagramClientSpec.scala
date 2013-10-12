@@ -6,6 +6,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import scala.concurrent.Await
 import scala.concurrent.duration._
+import me.alexbool.streamstorm.instagram.Media
 import language.postfixOps
 
 class InstagramClientSpec extends WordSpec with Matchers {
@@ -15,7 +16,8 @@ class InstagramClientSpec extends WordSpec with Matchers {
 
   "Instagram API client" must {
     "execute /tags/$tag/media/recent queries" in {
-      Await.result(client ? FindMediaByTag("rain", 20), timeout.duration)
+      val result = Await.result(client ? FindMediaByTag("rain", 20), timeout.duration).asInstanceOf[Seq[Media]]
+      result should have size 20
     }
   }
 }

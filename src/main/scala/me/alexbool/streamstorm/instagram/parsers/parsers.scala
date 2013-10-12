@@ -50,7 +50,7 @@ class MediaResponseParser extends RootJsonReader[Seq[Media]] {
   def read(json: JsValue) = json.asJsObject
           .fields("data").asInstanceOf[JsArray]
           .elements
-          .map((new MediaParser).read _)
+          .map((new MediaParser).read)
 }
 
 class PaginationParser extends RootJsonReader[Pagination] {

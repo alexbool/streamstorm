@@ -9,7 +9,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala-version>2.10.3</scala-version>
-        <spray-version>1.2-20131004</spray-version>
+        <spray-version>1.2-20131011</spray-version>
         <spray-json-version>1.2.5</spray-json-version>
         <akka-version>2.2.1</akka-version>
         <reactivemongo-version>0.10.0-SNAPSHOT</reactivemongo-version>
@@ -219,7 +219,7 @@
             <plugin>
                 <groupId>org.scalatest</groupId>
                 <artifactId>scalatest-maven-plugin</artifactId>
-                <version>1.0-M4-SNAP1</version>
+                <version>1.0-RC1</version>
                 <executions>
                     <execution>
                         <id>test</id>

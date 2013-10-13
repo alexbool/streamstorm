@@ -1,8 +1,8 @@
 package me.alexbool.streamstorm.instagram.client
 
 import org.scalatest.{Matchers, WordSpec}
-import me.alexbool.streamstorm.instagram.parsers.MediaResponseParser
 import spray.json.JsonParser
+import me.alexbool.streamstorm.instagram.client.MediaResponseParser
 
 class MessageParserSpec extends WordSpec with Matchers {
   "Instagram parsers" must {

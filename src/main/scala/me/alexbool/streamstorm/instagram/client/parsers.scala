@@ -1,4 +1,4 @@
-package me.alexbool.streamstorm.instagram.parsers
+package me.alexbool.streamstorm.instagram.client
 
 import spray.json._
 import org.joda.time.Instant

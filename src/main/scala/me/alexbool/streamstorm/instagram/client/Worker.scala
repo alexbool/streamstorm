@@ -4,7 +4,6 @@ import akka.actor.Status.Failure
 import akka.actor.{ActorLogging, Actor, ActorRef}
 import spray.http.HttpResponse
 import spray.json.JsonParser
-import me.alexbool.streamstorm.instagram.parsers.PaginationParser
 
 private [streamstorm] sealed abstract class WorkerBase[R](
     query: Query[R],

@@ -4,7 +4,6 @@ import spray.http.{HttpMethods, HttpMethod, HttpRequest}
 import spray.httpx.RequestBuilding._
 import spray.json._
 import me.alexbool.streamstorm.instagram.Media
-import me.alexbool.streamstorm.instagram.parsers.MediaResponseParser
 
 sealed trait Query[R] {
   private[streamstorm] def buildRequest(clientId: String): HttpRequest =

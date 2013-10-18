@@ -15,7 +15,7 @@ class MediaDao(collection: BSONCollection)(implicit ec: ExecutionContext) {
   })
 
   def findById(id: String): Future[Option[Media]] = {
-    collection.find(BSONDocument("_id" -> id)).cursor[Media].headOption()
+    collection.find(BSONDocument("_id" -> id)).cursor[Media].headOption
   }
 
   private class MediaMapper extends BSONDocumentReader[Media] with BSONDocumentWriter[Media] {

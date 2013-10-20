@@ -23,6 +23,24 @@ class MediaDao(collection: BSONCollection)(implicit ec: ExecutionContext) {
     collection.find(BSONDocument("_id" -> id)).cursor[Media].headOption
   }
 
+  def findByLocationSince(center: Location, distanceMeters: Int, since: Instant): Future[Seq[Media]] = {
+    val query = BSONDocument(
+      "location" -> BSONDocument(
+        "$near" -> BSONDocument(
+          "$geometry" -> BSONDocument(
+            "type" -> "Point",
+            "coordinates" -> BSONArray(center.longitude.toDouble, center.latitude.toDouble)
+          ),
+          "$maxDistance" -> distanceMeters
+        )
+      ),
+      "createdTime" -> BSONDocument(
+        "$gte" -> BSONDateTime(since.getMillis)
+      )
+    )
+    collection.find(query).cursor[Media].collect[Seq]()
+  }
+
   private class MediaMapper extends BSONDocumentReader[Media] with BSONDocumentWriter[Media] {
     def write(media: Media) = BSONDocument(
       "_id"         -> media.id,
@@ -33,7 +51,10 @@ class MediaDao(collection: BSONCollection)(implicit ec: ExecutionContext) {
         "thumb" -> writeImage(media.images.thumbnail)
       ),
       "createdTime" -> BSONDateTime(media.createdTime.getMillis),
-      "location"    -> media.location.map(loc => BSONArray(loc.longitude.toString(), loc.latitude.toString()))
+      "location"    -> media.location.map(loc => BSONDocument(
+        "type"        -> "Point",
+        "coordinates" -> BSONArray(loc.longitude.toDouble, loc.latitude.toDouble)
+      ))
     )
 
     private def writeImage(img: Image) =
@@ -49,7 +70,7 @@ class MediaDao(collection: BSONCollection)(implicit ec: ExecutionContext) {
       Media(
         id          = bson.getAs[BSONString]("_id").get.value,
         tags        = bson.getAs[BSONArray]("tags").get.values.to[Seq].map(_.asInstanceOf[BSONString].value),
-        location    = bson.getAs[BSONArray]("location").map(readLocation),
+        location    = bson.getAs[BSONDocument]("location").map(readLocation),
         images      = images,
         createdTime = new Instant(bson.getAs[BSONDateTime]("createdTime").get.value)
       )
@@ -61,9 +82,12 @@ class MediaDao(collection: BSONCollection)(implicit ec: ExecutionContext) {
       url    = doc.getAs[BSONString]("url").get.value
     )
 
-    private def readLocation(array: BSONArray) = Location(
-      longitude = BigDecimal(array.getAs[BSONString](0).get.value),
-      latitude  = BigDecimal(array.getAs[BSONString](1).get.value)
-    )
+    private def readLocation(loc: BSONDocument) = {
+      val array = loc.getAs[BSONArray]("coordinates").get
+      Location(
+        longitude = BigDecimal(array.getAs[BSONDouble](0).get.value),
+        latitude  = BigDecimal(array.getAs[BSONDouble](1).get.value)
+      )
+    }
   }
 }

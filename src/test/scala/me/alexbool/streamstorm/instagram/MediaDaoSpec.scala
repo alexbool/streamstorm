@@ -39,8 +39,8 @@ class MediaDaoSpec extends WordSpec with Matchers {
 
   "MediaDao" should {
     "save Media instances" in {
-      Await.result(dao.insertIfNotExists(media), 15.seconds) should be (true)
-      Await.result(dao.insertIfNotExists(media), 15.seconds) should be (false)
+      Await.result(dao.insertIfNotExists(media), 15.seconds) shouldEqual true
+      Await.result(dao.insertIfNotExists(media), 15.seconds) shouldEqual false
       val found = Await.result(dao.findById(media.id), 15.seconds).get
       found shouldEqual media
     }

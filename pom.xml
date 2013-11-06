@@ -14,7 +14,7 @@
         <akka-version>2.2.3</akka-version>
         <reactivemongo-version>0.10.0-SNAPSHOT</reactivemongo-version>
         <nscala-time-version>0.6.0</nscala-time-version>
-        <scalatest-version>2.0.RC2</scalatest-version>
+        <scalatest-version>2.0</scalatest-version>
     </properties>
     <repositories>
         <repository>

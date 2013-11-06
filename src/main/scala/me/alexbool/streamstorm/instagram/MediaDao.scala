@@ -10,7 +10,7 @@ import reactivemongo.core.commands.GetLastError
 class MediaDao(collection: BSONCollection)(implicit ec: ExecutionContext) {
 
   implicit private val mapper = new MediaMapper
-  private val writeConcern = GetLastError(waitForReplicatedOn = Some(1))
+  private val writeConcern = GetLastError(w = Some(BSONInteger(1)))
 
   def insertIfNotExists(media: Media): Future[Boolean] = collection
     .insert(media, writeConcern)
